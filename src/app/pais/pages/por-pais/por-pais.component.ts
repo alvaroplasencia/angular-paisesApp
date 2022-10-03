@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { PaisService } from '../../services/pais.service';
+import { Country } from '../../interfaces/pais.interface';
 
 @Component({
   selector: 'app-por-pais',
@@ -6,11 +8,28 @@ import { Component, OnInit } from '@angular/core';
   styles: [
   ]
 })
-export class PorPaisComponent implements OnInit {
+export class PorPaisComponent {
 
-  constructor() { }
+  termino: string = ""
+  hayError: boolean = false;
 
-  ngOnInit(): void {
+  paises: Country[] = [];
+
+  constructor(private paisService: PaisService) { }
+
+  buscar(){
+    this.hayError = false
+    this.paisService.buscarPais(this.termino).subscribe(paises=>{
+      console.log(paises);
+      this.paises = paises;
+    }, (err)=>{
+      this.hayError = true;
+      this.paises = [];
+    });
+  }
+
+  obtenerNombre(pais:Country): string {
+    return pais.name.common;
   }
 
 }
